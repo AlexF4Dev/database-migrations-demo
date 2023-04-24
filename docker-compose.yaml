@@ -2,50 +2,50 @@ version: '3'
 services:
 
   postgres:
-    image: postgres:11-alpine
+    image: postgres:15.2-alpine
     container_name: postgres
     restart: always
     environment:
       - POSTGRES_USER=$PGUSER
       - POSTGRES_PASSWORD=$PGPASSWORD
-      - POSTGRES_DB=$PGDATABASE
-    volumes:
-      - ./volumes/postgres/data:/var/lib/postgresql/data
-      - ./volumes/data:/opt
+     # - POSTGRES_DB=$PGDATABASE
+    #volumes:
+      # - ./volumes/postgres/data:/var/lib/postgresql/data
+      # - ./volumes/data:/opt
     ports:
       - "$PGPORT:5432"
 
-  sqitch:
-    image: "sqitch/sqitch:latest"
-    container_name: sqitch
-    env_file:
-      - .env
-    environment:
-      - PGUSER=$PGUSER
-      - PGPASSWORD=$PGPASSWORD
-      - PGHOST=$PGHOST
-      - PGDATABASE=$PGDATABASE
-      - PGPORT=$PGPORT
-    volumes:
-      - ./src/migrations/sqitch:/repo
+  # sqitch:
+  #   image: "sqitch/sqitch:latest"
+  #   container_name: sqitch
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     - PGUSER=$PGUSER
+  #     - PGPASSWORD=$PGPASSWORD
+  #     - PGHOST=$PGHOST
+  #     - PGDATABASE=$PGDATABASE
+  #     - PGPORT=$PGPORT
+  #   volumes:
+  #     - ./src/migrations/sqitch:/repo
 
-  flyway:
-    build: "./src/applications/flyway"
-    container_name: flyway
-    env_file:
-      - .env
-    command: bash -c "flyway migrate -locations=filesystem:/flyway/migrations/flyway -schemas=flyway -connectRetries=60"
-    environment:
-      - FLYWAY_URL=jdbc:postgresql://$PGHOST:$PGPORT/$PGDATABASE
-      - FLYWAY_USER=$PGUSER
-      - FLYWAY_PASSWORD=$PGPASSWORD
-    volumes:
-      - ./src/migrations:/flyway/migrations
+  # flyway:
+  #   build: "./src/applications/flyway"
+  #   container_name: flyway
+  #   env_file:
+  #     - .env
+  #   command: bash -c "flyway migrate -locations=filesystem:/flyway/migrations/flyway -schemas=flyway -connectRetries=60"
+  #   environment:
+  #     - FLYWAY_URL=jdbc:postgresql://$PGHOST:$PGPORT/$PGDATABASE
+  #     - FLYWAY_USER=$PGUSER
+  #     - FLYWAY_PASSWORD=$PGPASSWORD
+  #   volumes:
+  #     - ./src/migrations:/flyway/migrations
 
-  liquibase:
-    container_name: liquibase
-    image: liquibase/liquibase
-    command: --url=jdbc:postgresql://postgres:5432/postgres?user=admin&password=password --changeLogFile=changelog.xml update
-    volumes:
-      - ./src/migrations/liquibase/changelog.xml:/liquibase/changelog.xml
-      - ./src/migrations/liquibase/scripts:/liquibase/scripts
+  # liquibase:
+  #   container_name: liquibase
+  #   image: liquibase/liquibase
+  #   command: --url=jdbc:postgresql://postgres:5432/postgres?user=admin&password=password --changeLogFile=changelog.xml update
+  #   volumes:
+  #     - ./src/migrations/liquibase/changelog.xml:/liquibase/changelog.xml
+  #     - ./src/migrations/liquibase/scripts:/liquibase/scripts

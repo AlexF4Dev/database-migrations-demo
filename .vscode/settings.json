@@ -1,13 +1,14 @@
 {
+    "sqltools.useNodeRuntime" : false,
     "sqltools.connections": [
         {
             "previewLimit": 50,
-            "server": "127.0.0.1",
+            "server": "localhost",
             "port": 5432,
             "driver": "PostgreSQL",
-            "name": "migrations",
-            "database": "flyway",
-            "username": "admin",
+            "name": "test",
+            "database": "root",
+            "username": "root",
             "password": "password"
         }
     ]
